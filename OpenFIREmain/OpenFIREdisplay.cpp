@@ -27,6 +27,16 @@ bool ExtDisplay::Begin()
         display = nullptr;
     }
 
+    // 初始化中文显示支持
+    if(!OpenFIREChinese::Initialize(display)) {
+      // 如果初始化失败，显示错误信息
+      display->clearDisplay();
+      display->setTextSize(1);
+      display->setCursor(0, 0);
+      display->println("中文显示初始化失败");
+      display->display();
+    }
+
     // TODO: for some reason, doing this AFTER saving updated pins settings (even when doing it from defaults and there's no default mappings for peripheral pins)
     // causes the board to hang. Even though this is all correct (and any display objects should get deleted from the above, so don't think it can be a new object thing)...
     if(OF_Prefs::pins[OF_Const::periphSCL] >= 0 && OF_Prefs::pins[OF_Const::periphSDA] >= 0) {
@@ -118,12 +128,12 @@ void ExtDisplay::ScreenModeChange(const int &screenMode, const bool &isAnalog)
           case Screen_Init:
             display->setTextSize(2);
             display->setCursor(20, 18);
-            display->println("Welcome!");
+            PrintUTF8("欢迎！", 20, 18, 16);
             display->setTextSize(1);
             display->setCursor(12, 40);
-            display->println(" Pull trigger to");
+            PrintUTF8("扣动扳机开始", 12, 40, 16);
             display->setCursor(12, 52);
-            display->println("start calibration!");
+            PrintUTF8("校准！", 12, 52, 16);
             break;
           case Screen_IRTest:
             TopPanelUpdate("", "IR Test");
@@ -267,20 +277,20 @@ void ExtDisplay::PauseScreenShow(const int &currentProf, const char* name1, cons
 {
     if(display != nullptr) {
         const char* namesList[] = { name1, name2, name3, name4 };
-        TopPanelUpdate("Using ", namesList[currentProf]); // names are placeholder
+        TopPanelUpdate("使用 ", namesList[currentProf]); // names are placeholder
         display->fillRect(0, 16, 128, 48, BLACK);
         display->setTextSize(1);
         display->setCursor(0, 17);
-        display->print(" A > ");
+        PrintUTF8(" A键 > ", 0, 17, 16);
         display->println(name1);
         display->setCursor(0, 17+11);
-        display->print(" B > ");
+        PrintUTF8(" B键 > ", 0, 17+11, 16);
         display->println(name2);
         display->setCursor(0, 17+(11*2));
-        display->print("Str> ");
+        PrintUTF8("_STR键> ", 0, 17+(11*2), 16);
         display->println(name3);
         display->setCursor(0, 17+(11*3));
-        display->print("Sel> ");
+        PrintUTF8("SEL键> ", 0, 17+(11*3), 16);
         display->println(name4);
         display->display();
     }
@@ -300,40 +310,40 @@ void ExtDisplay::PauseListUpdate(const int &selection)
           case ScreenPause_Calibrate:
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 25);
-            display->println(" Send Escape Keypress");
+            PrintUTF8(" 发送ESC按键 ", 0, 25, 16);
             display->setTextColor(BLACK, WHITE);
             display->setCursor(0, 36);
-            display->println(" Calibrate ");
+            PrintUTF8(" 校准 ", 0, 36, 16);
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 47);
-            display->println(" Profile Select ");
+            PrintUTF8(" 选择配置文件 ", 0, 47, 16);
             break;
           case ScreenPause_ProfileSelect:
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 25);
-            display->println(" Calibrate ");
+            PrintUTF8(" 校准 ", 0, 25, 16);
             display->setTextColor(BLACK, WHITE);
             display->setCursor(0, 36);
-            display->println(" Profile Select ");
+            PrintUTF8(" 选择配置文件 ", 0, 36, 16);
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 47);
-            display->println(" Save Gun Settings ");
+            PrintUTF8(" 保存设置 ", 0, 47, 16);
             break;
           case ScreenPause_Save:
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 25);
-            display->println(" Profile Select ");
+            PrintUTF8(" 选择配置文件 ", 0, 25, 16);
             display->setTextColor(BLACK, WHITE);
             display->setCursor(0, 36);
-            display->println(" Save Gun Settings ");
+            PrintUTF8(" 保存设置 ", 0, 36, 16);
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 47);
             if(OF_Prefs::pins[OF_Const::rumblePin] >= 0 && OF_Prefs::pins[OF_Const::rumbleSwitch] == -1) {
-              display->println(" Rumble Toggle ");
+              PrintUTF8(" 震动开关 ", 0, 47, 16);
             } else if(OF_Prefs::pins[OF_Const::solenoidPin] >= 0 && OF_Prefs::pins[OF_Const::solenoidSwitch] == -1) {
-              display->println(" Solenoid Toggle ");
+              PrintUTF8("  solenoid开关 ", 0, 47, 16);
             } else {
-              display->println(" Send Escape Keypress");
+              PrintUTF8(" 发送ESC按键 ", 0, 47, 16);
             }
             break;
           case ScreenPause_Rumble:
@@ -565,6 +575,25 @@ void ExtDisplay::PrintAmmo(const uint &ammo)
         }
 
         display->display();
+    }
+}
+
+void ExtDisplay::PrintChinese(const uint8_t* text, int16_t x, int16_t y, uint8_t size)
+{
+    if(display != nullptr) {
+        OpenFIREChinese::DrawString(text, x, y, size);
+    }
+}
+
+void ExtDisplay::PrintUTF8(const char* text, int16_t x, int16_t y, uint8_t size)
+{
+    if(display != nullptr) {
+        // Convert UTF-8 to GB2312
+        uint8_t gb2312Buffer[256]; // Buffer for converted text
+        uint16_t len = OpenFIREChinese::UTF8ToGB2312(text, gb2312Buffer, sizeof(gb2312Buffer));
+        if (len > 0) {
+            OpenFIREChinese::DrawString(gb2312Buffer, x, y, size);
+        }
     }
 }
 

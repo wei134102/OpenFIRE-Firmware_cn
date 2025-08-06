@@ -13,6 +13,7 @@
 #include <Adafruit_SSD1306.h>
 
 #include "OpenFIREDefines.h"
+#include "OpenFIREChinese.h"
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -61,6 +62,20 @@ public:
 
     /// @brief Update main screen life glyphs
     void PrintLife(const uint &life);
+
+    /// @brief Display Chinese text
+    /// @param text Chinese text in GB2312 encoding
+    /// @param x X coordinate
+    /// @param y Y coordinate
+    /// @param size Font size (default 16)
+    void PrintChinese(const uint8_t* text, int16_t x, int16_t y, uint8_t size = 16);
+
+    /// @brief Display Chinese text from UTF-8 string
+    /// @param text UTF-8 encoded string
+    /// @param x X coordinate
+    /// @param y Y coordinate
+    /// @param size Font size (default 16)
+    void PrintUTF8(const char* text, int16_t x, int16_t y, uint8_t size = 16);
 
     enum ScreenMode_e {
         Screen_None = -1,

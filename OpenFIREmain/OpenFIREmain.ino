@@ -23,6 +23,7 @@
 #include "OpenFIREFeedback.h"
 #include "OpenFIREprefs.h"
 #include "OpenFIREconstant.h"
+#include "test_chinese.h"
 
 // Sets up the environment
 void setup() {
@@ -161,8 +162,10 @@ void setup() {
         bool LEDisOn = false;
 
         #ifdef USES_DISPLAY
-            FW_Common::OLED.ScreenModeChange(ExtDisplay::Screen_Init);
-        #endif // USES_DISPLAY
+                FW_Common::OLED.ScreenModeChange(ExtDisplay::Screen_Init);
+                // 测试中文显示
+                TestChineseDisplay(&FW_Common::OLED);
+            #endif // USES_DISPLAY
 
         while(!(FW_Common::buttons.pressedReleased == FW_Const::BtnMask_Trigger) || FW_Common::camNotAvailable) {
             // Check and process serial commands, in case user needs to change EEPROM settings.

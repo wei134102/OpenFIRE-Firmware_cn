@@ -91,7 +91,8 @@ public:
         //PauseMode_BurstFireToggle,
         #endif // USES_SOLENOID
         PauseMode_ModeChange,
-        PauseMode_EscapeSignal
+    PauseMode_LowButtonToggle,
+    PauseMode_EscapeSignal
     };
 
     //// Button Masks

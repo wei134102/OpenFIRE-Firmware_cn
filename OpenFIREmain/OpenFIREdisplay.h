@@ -85,6 +85,7 @@ public:
         ScreenPause_Rumble,
         ScreenPause_Solenoid,
         ScreenPause_ModeChange,
+        ScreenPause_LowButtonToggle,
         ScreenPause_EscapeKey
     };
 

@@ -78,6 +78,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+          ref: ${{ github.ref }}
           
       - name: Install Arduino-cli
         uses: arduino/setup-arduino-cli@v2

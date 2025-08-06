@@ -98,6 +98,12 @@ void ExtDisplay::ScreenModeChange(const int &screenMode, const bool &isAnalog)
             else {
                 if(TinyUSBDevices.onBattery) { display->drawBitmap(2, 46, btConnectIco, CONNECTION_WIDTH, CONNECTION_HEIGHT, WHITE); }
                 else { display->drawBitmap(2, 46, usbConnectIco, CONNECTION_WIDTH, CONNECTION_HEIGHT, WHITE); }
+                // 显示Low Button模式状态
+                if(OF_Prefs::toggles[OF_Const::lowButtonsMode]) {
+                    display->setCursor(80, 48);
+                    display->setTextSize(1);
+                    display->print("LOW");
+                }
                 if(isAnalog) { display->drawBitmap(108, 49, gamepadIco, GAMEPAD_WIDTH, GAMEPAD_HEIGHT, WHITE); }
                 else { display->drawBitmap(109, 48, mouseIco, MOUSE_WIDTH, MOUSE_HEIGHT, WHITE); }
             }
@@ -146,6 +152,12 @@ void ExtDisplay::ScreenModeChange(const int &screenMode, const bool &isAnalog)
           case Screen_Mamehook_Single:
             if(TinyUSBDevices.onBattery) { display->drawBitmap(2, 46, btConnectIco, CONNECTION_WIDTH, CONNECTION_HEIGHT, WHITE); }
             else { display->drawBitmap(2, 46, usbConnectIco, CONNECTION_WIDTH, CONNECTION_HEIGHT, WHITE); }
+            // 显示Low Button模式状态
+            if(OF_Prefs::toggles[OF_Const::lowButtonsMode]) {
+                display->setCursor(80, 48);
+                display->setTextSize(1);
+                display->print("LOW");
+            }
             if(isAnalog) { display->drawBitmap(108, 49, gamepadIco, GAMEPAD_WIDTH, GAMEPAD_HEIGHT, WHITE); }
             else { display->drawBitmap(109, 48, mouseIco, MOUSE_WIDTH, MOUSE_HEIGHT, WHITE); }
             if(serialDisplayType == ScreenSerial_Life && lifeBar) {

@@ -84,7 +84,15 @@ public:
         ScreenPause_Save,
         ScreenPause_Rumble,
         ScreenPause_Solenoid,
+        ScreenPause_ModeChange,
         ScreenPause_EscapeKey
+    };
+
+    // Mode change menu items
+    enum ModeChangeMenu_e {
+        ModeChange_MouseKeyboard = 0,
+        ModeChange_Gamepad,
+        ModeChange_MisterOptimized
     };
 
     enum ScreenSerialInit_e {

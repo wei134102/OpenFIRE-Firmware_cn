@@ -1,4 +1,4 @@
- /*!
+/*!
  * @file OpenFIREcommon.h
  * @brief Shared constants used throughout the OpenFIRE firmware.
  *
@@ -90,6 +90,7 @@ public:
         PauseMode_SolenoidToggle,
         //PauseMode_BurstFireToggle,
         #endif // USES_SOLENOID
+        PauseMode_ModeChange,
         PauseMode_EscapeSignal
     };
 
@@ -107,6 +108,9 @@ public:
     static inline constexpr uint32_t ExitPauseModeBtnMask = BtnMask_Reload | BtnMask_Home;
 
     // press and hold any button to exit simple pause menu (this is not a button combo)
+    // Button combination to enter mode change menu
+    static inline constexpr uint32_t ModeChangeBtnMask = BtnMask_Start | BtnMask_Right;
+
     static inline constexpr uint32_t ExitPauseModeHoldBtnMask = BtnMask_A | BtnMask_B;
 
     // button combo to skip the center calibration step

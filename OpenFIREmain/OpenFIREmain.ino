@@ -597,7 +597,7 @@ void loop()
                           OF_Prefs::toggles[OF_Const::rumbleFF] = !OF_Prefs::toggles[OF_Const::rumbleFF];
                           
                           // Save the setting
-                          OF_Prefs::SavePrefiles();
+                          OF_Prefs::SaveToggles();
                           
                           
                           // Update display

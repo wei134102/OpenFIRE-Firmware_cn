@@ -1,2 +1,8 @@
 OpenFIREmain/build
 micropython-gb2312/
+./pio/
+./git/
+./build/
+.vscode/
+.git/
+.pio/

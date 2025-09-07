@@ -414,15 +414,7 @@ void ExtDisplay::PauseListUpdate(const int &selection)
           case ScreenPause_AutofireToggle:
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 25);
-            if(OF_Prefs::pins[OF_Const::solenoidPin] >= 0 && OF_Prefs::pins[OF_Const::solenoidSwitch] == -1) {
-              display->println(" Solenoid Toggle ");
-            } else if(OF_Prefs::pins[OF_Const::rumblePin] >= 0 && OF_Prefs::pins[OF_Const::rumbleSwitch] == -1) {
-              display->println(" Rumble Toggle ");
-            } else if(OF_Prefs::toggles[OF_Const::lowButtonsMode]) {
-              display->println(" Low Button: ON ");
-            } else {
-              display->println(" Low Button: OFF ");
-            }
+            display->println(" Autofire Toggle ");
             display->setTextColor(BLACK, WHITE);
             display->setCursor(0, 36);
             display->printf(" Autofire: %s ", OF_Prefs::toggles[OF_Const::autofire] ? "ON" : "OFF");

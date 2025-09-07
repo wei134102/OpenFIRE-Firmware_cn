@@ -460,6 +460,9 @@ void loop()
                               Serial.print("Autofire is now ");
                               Serial.println(OF_Prefs::toggles[OF_Const::autofire] ? "ON" : "OFF");
                           }
+                          #ifdef USES_DISPLAY
+                              FW_Common::OLED.PauseListUpdate(ExtDisplay::ScreenPause_AutofireToggle);
+                          #endif // USES_DISPLAY
                           #ifdef LED_ENABLE
                               if(OF_Prefs::toggles[OF_Const::autofire]) {
                                   OF_RGB::LedUpdate(0,255,0);

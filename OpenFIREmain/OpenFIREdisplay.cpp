@@ -208,9 +208,15 @@ void ExtDisplay::IdleOps()
               if(millis() - idleTimeStamp > OLED_IDLEUPD_INTERVAL) {
                   idleTimeStamp = millis();
                   if(showingTemp) {
-                      TopPanelUpdate("Prof: ", OF_Prefs::profiles[OF_Prefs::currentProfile].name);
-                      showingTemp = false;
-                  } else {
+                          // Create a temporary string with profile name and layout
+                          char profWithLayout[16]; // Make sure this is large enough
+                          strcpy(profWithLayout, OF_Prefs::profiles[OF_Prefs::currentProfile].name);
+                          strcat(profWithLayout, " ");
+                          strcat(profWithLayout, OF_Prefs::profiles[OF_Prefs::currentProfile].irLayout == OF_Const::layoutDiamond ? "Diam" : "Squa");
+                          
+                          TopPanelUpdate("Prof: ", profWithLayout);
+                          showingTemp = false;
+                      } else {
                       idleTempStamp = idleTimeStamp;
                       ShowTemp();
                       showingTemp = true;

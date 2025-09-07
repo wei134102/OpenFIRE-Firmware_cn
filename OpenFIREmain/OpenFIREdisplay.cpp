@@ -100,9 +100,15 @@ void ExtDisplay::ScreenModeChange(const int &screenMode, const bool &isAnalog)
                 else { display->drawBitmap(2, 46, usbConnectIco, CONNECTION_WIDTH, CONNECTION_HEIGHT, WHITE); }
                 // 显示Low Button模式状态
                 if(OF_Prefs::toggles[OF_Const::lowButtonsMode]) {
-                    display->setCursor(80, 48);
+                    display->setCursor(70, 48);
                     display->setTextSize(1);
                     display->print("LOW");
+                }
+                // 显示Autofire状态
+                if(OF_Prefs::toggles[OF_Const::autofire]) {
+                    display->setCursor(82, 48);
+                    display->setTextSize(1);
+                    display->print(" AF");
                 }
                 if(isAnalog) { display->drawBitmap(108, 49, gamepadIco, GAMEPAD_WIDTH, GAMEPAD_HEIGHT, WHITE); }
                 else { display->drawBitmap(109, 48, mouseIco, MOUSE_WIDTH, MOUSE_HEIGHT, WHITE); }
@@ -154,9 +160,15 @@ void ExtDisplay::ScreenModeChange(const int &screenMode, const bool &isAnalog)
             else { display->drawBitmap(2, 46, usbConnectIco, CONNECTION_WIDTH, CONNECTION_HEIGHT, WHITE); }
             // 显示Low Button模式状态
             if(OF_Prefs::toggles[OF_Const::lowButtonsMode]) {
-                display->setCursor(80, 48);
+                display->setCursor(70, 48);
                 display->setTextSize(1);
                 display->print("LOW");
+            }
+            // 显示Autofire状态
+            if(OF_Prefs::toggles[OF_Const::autofire]) {
+                display->setCursor(82, 48);
+                display->setTextSize(1);
+                display->print(" AF");
             }
             if(isAnalog) { display->drawBitmap(108, 49, gamepadIco, GAMEPAD_WIDTH, GAMEPAD_HEIGHT, WHITE); }
             else { display->drawBitmap(109, 48, mouseIco, MOUSE_WIDTH, MOUSE_HEIGHT, WHITE); }
@@ -374,9 +386,9 @@ void ExtDisplay::PauseListUpdate(const int &selection)
                 display->println(" Solenoid Toggle ");
                 display->setTextColor(WHITE, BLACK);
                 display->setCursor(0, 47);
-                display->println(" Mode Change ");
+                display->println(" Autofire Toggle ");
               } else {
-                display->println(" Mode Change ");
+                display->println(" Autofire Toggle ");
                 display->setTextColor(WHITE, BLACK);
                 display->setCursor(0, 47);
                 display->println("Calibrate");
@@ -388,9 +400,9 @@ void ExtDisplay::PauseListUpdate(const int &selection)
               display->println(" Solenoid Toggle ");
               display->setTextColor(WHITE, BLACK);
               display->setCursor(0, 47);
-              display->println(" Mode Change ");
+              display->println(" Autofire Toggle ");
             } else {
-              display->println(" Mode Change ");
+              display->println(" Autofire Toggle ");
               display->setTextColor(BLACK, WHITE);
               display->setCursor(0, 36);
               display->println(" Calibrate ");
@@ -398,6 +410,25 @@ void ExtDisplay::PauseListUpdate(const int &selection)
               display->setCursor(0, 47);
               display->println(" Profile Select ");
             }
+            break;
+          case ScreenPause_AutofireToggle:
+            display->setTextColor(WHITE, BLACK);
+            display->setCursor(0, 25);
+            if(OF_Prefs::pins[OF_Const::solenoidPin] >= 0 && OF_Prefs::pins[OF_Const::solenoidSwitch] == -1) {
+              display->println(" Solenoid Toggle ");
+            } else if(OF_Prefs::pins[OF_Const::rumblePin] >= 0 && OF_Prefs::pins[OF_Const::rumbleSwitch] == -1) {
+              display->println(" Rumble Toggle ");
+            } else if(OF_Prefs::toggles[OF_Const::lowButtonsMode]) {
+              display->println(" Low Button: ON ");
+            } else {
+              display->println(" Low Button: OFF ");
+            }
+            display->setTextColor(BLACK, WHITE);
+            display->setCursor(0, 36);
+            display->printf(" Autofire: %s ", OF_Prefs::toggles[OF_Const::autofire] ? "ON" : "OFF");
+            display->setTextColor(WHITE, BLACK);
+            display->setCursor(0, 47);
+            display->println(" Send Escape Keypress ");
             break;
           case ScreenPause_LowButtonToggle:
             display->setTextColor(WHITE, BLACK);
@@ -417,15 +448,7 @@ void ExtDisplay::PauseListUpdate(const int &selection)
           case ScreenPause_ModeChange:
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 25);
-            if(OF_Prefs::pins[OF_Const::solenoidPin] >= 0 && OF_Prefs::pins[OF_Const::solenoidSwitch] == -1) {
-              display->println(" Solenoid Toggle ");
-            } else if(OF_Prefs::pins[OF_Const::rumblePin] >= 0 && OF_Prefs::pins[OF_Const::rumbleSwitch] == -1) {
-              display->println(" Rumble Toggle ");
-            } else if(OF_Prefs::toggles[OF_Const::lowButtonsMode]) {
-              display->println(" Low Button: ON ");
-            } else {
-              display->println(" Low Button: OFF ");
-            }
+            display->println(" Autofire Toggle ");
             display->setTextColor(BLACK, WHITE);
             display->setCursor(0, 36);
             display->println(" Mode Change ");
@@ -443,31 +466,13 @@ void ExtDisplay::PauseListUpdate(const int &selection)
           case ScreenPause_EscapeKey:
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 25);
-            if(OF_Prefs::pins[OF_Const::solenoidPin] >= 0 && OF_Prefs::pins[OF_Const::solenoidSwitch] == -1) {
-              display->println(" Solenoid Toggle ");
-              display->setTextColor(BLACK, WHITE);
-              display->setCursor(0, 36);
-              display->println(" Send Escape Keypress");
-              display->setTextColor(WHITE, BLACK);
-              display->setCursor(0, 47);
-              display->println(" Calibrate ");
-            } else if(OF_Prefs::pins[OF_Const::rumblePin] >= 0 && OF_Prefs::pins[OF_Const::rumbleSwitch] == -1) {
-              display->println(" Rumble Toggle ");
-              display->setTextColor(BLACK, WHITE);
-              display->setCursor(0, 36);
-              display->println(" Send Escape Keypress");
-              display->setTextColor(WHITE, BLACK);
-              display->setCursor(0, 47);
-              display->println(" Calibrate ");
-            } else {
-              display->println(" Save Gun Settings ");
-              display->setTextColor(BLACK, WHITE);
-              display->setCursor(0, 36);
-              display->println(" Send Escape Keypress");
-              display->setTextColor(WHITE, BLACK);
-              display->setCursor(0, 47);
-              display->println(" Calibrate ");
-            }
+            display->println(" Low Button: " + String(OF_Prefs::toggles[OF_Const::lowButtonsMode] ? "ON" : "OFF"));
+            display->setTextColor(BLACK, WHITE);
+            display->setCursor(0, 36);
+            display->println(" Send Escape Keypress");
+            display->setTextColor(WHITE, BLACK);
+            display->setCursor(0, 47);
+            display->println(" Calibrate ");
             break;
         }
         display->display();

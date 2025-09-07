@@ -84,6 +84,7 @@ public:
         ScreenPause_Save,
         ScreenPause_Rumble,
         ScreenPause_Solenoid,
+        ScreenPause_AutofireToggle,
         ScreenPause_ModeChange,
         ScreenPause_LowButtonToggle,
         ScreenPause_EscapeKey

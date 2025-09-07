@@ -90,6 +90,7 @@ public:
         PauseMode_SolenoidToggle,
         //PauseMode_BurstFireToggle,
         #endif // USES_SOLENOID
+        PauseMode_AutofireToggle,
         PauseMode_ModeChange,
     PauseMode_LowButtonToggle,
     PauseMode_EscapeSignal

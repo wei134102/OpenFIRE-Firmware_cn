@@ -451,6 +451,26 @@ void loop()
                               Serial.println("Saving...");
                           FW_Common::SavePreferences();
                           break;
+                        case FW_Const::PauseMode_AutofireToggle:
+                          if(!OF_Serial::serialMode) {
+                              Serial.println("Toggling autofire...");
+                          }
+                          OF_Prefs::toggles[OF_Const::autofire] = !OF_Prefs::toggles[OF_Const::autofire];
+                          if(!OF_Serial::serialMode) {
+                              Serial.print("Autofire is now ");
+                              Serial.println(OF_Prefs::toggles[OF_Const::autofire] ? "ON" : "OFF");
+                          }
+                          #ifdef LED_ENABLE
+                              if(OF_Prefs::toggles[OF_Const::autofire]) {
+                                  OF_RGB::LedUpdate(0,255,0);
+                              } else {
+                                  OF_RGB::LedUpdate(255,0,0);
+                              }
+                              delay(200);
+                              OF_RGB::SetLedPackedColor(OF_Prefs::profiles[OF_Prefs::currentProfile].color);
+                          #endif // LED_ENABLE
+                          OF_Prefs::SaveToggles();
+                          break;
                         case FW_Const::PauseMode_ModeChange:
                           if(!OF_Serial::serialMode) {
                               Serial.println("Changing input mode...");
@@ -1144,11 +1164,15 @@ void SetPauseModeSelection(const bool &isIncrement)
                     }
                 #endif // USES_RUMBLE
                 #ifdef USES_SOLENOID
-                    if(FW_Common::pauseModeSelection == FW_Const::PauseMode_SolenoidToggle &&
-                    (OF_Prefs::pins[OF_Const::solenoidSwitch] >= 0 || OF_Prefs::pins[OF_Const::solenoidPin] == -1)) {
-                        FW_Common::pauseModeSelection++;
-                    }
-                #endif // USES_SOLENOID
+                if(FW_Common::pauseModeSelection == FW_Const::PauseMode_SolenoidToggle &&
+                (OF_Prefs::pins[OF_Const::solenoidSwitch] >= 0 || OF_Prefs::pins[OF_Const::solenoidPin] == -1)) {
+                    FW_Common::pauseModeSelection++;
+                }
+            #endif // USES_SOLENOID
+            if(FW_Common::pauseModeSelection == FW_Const::PauseMode_AutofireToggle &&
+            (OF_Prefs::pins[OF_Const::autofireSwitch] >= 0 || !OF_Prefs::toggles[OF_Const::solenoid])) {
+                FW_Common::pauseModeSelection++;
+            }
                 if(FW_Common::pauseModeSelection == FW_Const::PauseMode_ModeChange) {
                     // ModeChange is always visible
                 }
@@ -1185,6 +1209,10 @@ void SetPauseModeSelection(const bool &isIncrement)
                         FW_Common::pauseModeSelection--;
                     }
                 #endif // USES_RUMBLE
+                if(FW_Common::pauseModeSelection == FW_Const::PauseMode_AutofireToggle &&
+                (OF_Prefs::pins[OF_Const::autofireSwitch] >= 0 || !OF_Prefs::toggles[OF_Const::solenoid])) {
+                    FW_Common::pauseModeSelection--;
+                }
                 if(FW_Common::pauseModeSelection == FW_Const::PauseMode_ModeChange) {
                     // ModeChange is always visible
                 }
@@ -1229,6 +1257,16 @@ void SetPauseModeSelection(const bool &isIncrement)
           Serial.println("Selecting: Save Settings");
           #ifdef LED_ENABLE
               OF_RGB::LedUpdate(155,100,0);
+          #endif // LED_ENABLE
+          break;
+        case FW_Const::PauseMode_AutofireToggle:
+          Serial.println("Selecting: Toggle autofire On/Off");
+          #ifdef LED_ENABLE
+              if(OF_Prefs::toggles[OF_Const::autofire]) {
+                  OF_RGB::LedUpdate(0,255,0);
+              } else {
+                  OF_RGB::LedUpdate(255,0,0);
+              }
           #endif // LED_ENABLE
           break;
         #ifdef USES_RUMBLE

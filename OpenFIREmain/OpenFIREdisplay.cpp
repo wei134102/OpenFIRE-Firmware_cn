@@ -466,8 +466,33 @@ void ExtDisplay::PauseListUpdate(const int &selection)
             display->printf(" Layout: %s ", OF_Prefs::profiles[OF_Prefs::currentProfile].irLayout == OF_Const::layoutDiamond ? "Diamond" : "Square");
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 47);
+            #ifdef USES_RUMBLE
+            if(OF_Prefs::pins[OF_Const::rumblePin] >= 0) {
+              display->println(" Rumble FFB Toggle ");
+            } else {
+              display->println(" Send Escape Keypress ");
+            }
+            #else
+            display->println(" Send Escape Keypress ");
+            #endif
+            break;
+          #ifdef USES_RUMBLE
+          case ScreenPause_RumbleFFToggle:
+            display->setTextColor(WHITE, BLACK);
+            display->setCursor(0, 25);
+            display->printf(" Layout: %s ", OF_Prefs::profiles[OF_Prefs::currentProfile].irLayout == OF_Const::layoutDiamond ? "Diamond" : "Square");
+            display->setTextColor(BLACK, WHITE);
+            display->setCursor(0, 36);
+            if(OF_Prefs::pins[OF_Const::rumblePin] >= 0) {
+              display->printf(" Rumble FFB: %s ", OF_Prefs::toggles[OF_Const::rumbleFF] ? "ON" : "OFF");
+            } else {
+              display->println(" Rumble FFB: N/A ");
+            }
+            display->setTextColor(WHITE, BLACK);
+            display->setCursor(0, 47);
             display->println(" Send Escape Keypress ");
             break;
+          #endif
           case ScreenPause_ModeChange:
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 25);

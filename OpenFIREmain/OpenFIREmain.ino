@@ -590,6 +590,34 @@ void loop()
                           
                           break;
                         #ifdef USES_RUMBLE
+                        case FW_Const::PauseMode_RumbleFFToggle:
+                          if(!OF_Serial::serialMode)
+                              Serial.println("Toggling Rumble FFB!");
+                          // Toggle rumbleFF state
+                          OF_Prefs::toggles[OF_Const::rumbleFF] = !OF_Prefs::toggles[OF_Const::rumbleFF];
+                          
+                          // Save the setting
+                          OF_Prefs::SavePreferences();
+                          
+                          // Update display
+                          #ifdef USES_DISPLAY
+                              FW_Common::OLED.PauseListUpdate(ExtDisplay::ScreenPause_RumbleFFToggle);
+                          #endif // USES_DISPLAY
+                          
+                          // Provide visual feedback
+                          #ifdef LED_ENABLE
+                              if(OF_Prefs::toggles[OF_Const::rumbleFF]) {
+                                  // Green for ON
+                                  OF_RGB::LedUpdate(0,255,0);
+                              } else {
+                                  // Red for OFF
+                                  OF_RGB::LedUpdate(255,0,0);
+                              }
+                              delay(500);
+                              OF_RGB::SetLedPackedColor(OF_Prefs::profiles[OF_Prefs::currentProfile].color);
+                          #endif // LED_ENABLE
+                          
+                          break;
                         case FW_Const::PauseMode_RumbleToggle:
                           if(!OF_Serial::serialMode)
                               Serial.println("Toggling rumble!");
@@ -1213,11 +1241,17 @@ void SetPauseModeSelection(const bool &isIncrement)
             // then skip over the manual toggle options.
             #ifdef USES_SWITCHES
                 #ifdef USES_RUMBLE
-                    if(FW_Common::pauseModeSelection == FW_Const::PauseMode_RumbleToggle &&
-                    (OF_Prefs::pins[OF_Const::rumbleSwitch] >= 0 || OF_Prefs::pins[OF_Const::rumblePin] == -1)) {
-                        FW_Common::pauseModeSelection++;
-                    }
-                #endif // USES_RUMBLE
+                #ifdef PauseMode_RumbleFFToggle
+                if(FW_Common::pauseModeSelection == FW_Const::PauseMode_RumbleFFToggle &&
+                !(OF_Prefs::pins[OF_Const::rumblePin] >= 0)) {
+                    FW_Common::pauseModeSelection++;
+                }
+                #endif // PauseMode_RumbleFFToggle
+                if(FW_Common::pauseModeSelection == FW_Const::PauseMode_RumbleToggle &&
+                (OF_Prefs::pins[OF_Const::rumbleSwitch] >= 0 || OF_Prefs::pins[OF_Const::rumblePin] == -1)) {
+                    FW_Common::pauseModeSelection++;
+                }
+            #endif // USES_RUMBLE
                 #ifdef USES_SOLENOID
                 if(FW_Common::pauseModeSelection == FW_Const::PauseMode_SolenoidToggle &&
                 (OF_Prefs::pins[OF_Const::solenoidSwitch] >= 0 || OF_Prefs::pins[OF_Const::solenoidPin] == -1)) {
@@ -1239,6 +1273,12 @@ void SetPauseModeSelection(const bool &isIncrement)
                 }
             #else
                 #ifdef USES_RUMBLE
+                    #ifdef PauseMode_RumbleFFToggle
+                    if(FW_Common::pauseModeSelection == FW_Const::PauseMode_RumbleFFToggle &&
+                    !(OF_Prefs::pins[OF_Const::rumblePin] >= 0)) {
+                        FW_Common::pauseModeSelection++;
+                    }
+                    #endif // PauseMode_RumbleFFToggle
                     if(FW_Common::pauseModeSelection == FW_Const::PauseMode_RumbleToggle &&
                     !(OF_Prefs::pins[OF_Const::rumblePin] >= 0)) {
                         FW_Common::pauseModeSelection++;
@@ -1269,6 +1309,12 @@ void SetPauseModeSelection(const bool &isIncrement)
                     (OF_Prefs::pins[OF_Const::rumbleSwitch] >= 0 || OF_Prefs::pins[OF_Const::rumblePin] == -1)) {
                         FW_Common::pauseModeSelection--;
                     }
+                    #ifdef PauseMode_RumbleFFToggle
+                    if(FW_Common::pauseModeSelection == FW_Const::PauseMode_RumbleFFToggle &&
+                    !(OF_Prefs::pins[OF_Const::rumblePin] >= 0)) {
+                        FW_Common::pauseModeSelection--;
+                    }
+                    #endif // PauseMode_RumbleFFToggle
                 #endif // USES_RUMBLE
                 if(FW_Common::pauseModeSelection == FW_Const::PauseMode_AutofireToggle &&
                 (OF_Prefs::pins[OF_Const::autofireSwitch] >= 0 || !OF_Prefs::toggles[OF_Const::solenoid])) {
@@ -1292,6 +1338,12 @@ void SetPauseModeSelection(const bool &isIncrement)
                     !(OF_Prefs::pins[OF_Const::rumblePin] >= 0)) {
                         FW_Common::pauseModeSelection--;
                     }
+                    #ifdef PauseMode_RumbleFFToggle
+                    if(FW_Common::pauseModeSelection == FW_Const::PauseMode_RumbleFFToggle &&
+                    !(OF_Prefs::pins[OF_Const::rumblePin] >= 0)) {
+                        FW_Common::pauseModeSelection--;
+                    }
+                    #endif // PauseMode_RumbleFFToggle
                 #endif // USES_RUMBLE
             #endif // USES_SWITCHES
         }
@@ -1350,6 +1402,16 @@ void SetPauseModeSelection(const bool &isIncrement)
           #endif // LED_ENABLE
           break;
         #ifdef USES_RUMBLE
+        case FW_Const::PauseMode_RumbleFFToggle:
+          Serial.println("Selecting: Toggle Rumble FFB On/Off");
+          #ifdef LED_ENABLE
+              if(OF_Prefs::toggles[OF_Const::rumbleFF]) {
+                  OF_RGB::LedUpdate(0,255,0);
+              } else {
+                  OF_RGB::LedUpdate(255,0,0);
+              }
+          #endif // LED_ENABLE
+          break;
         case FW_Const::PauseMode_RumbleToggle:
           Serial.println("Selecting: Toggle rumble On/Off");
           #ifdef LED_ENABLE

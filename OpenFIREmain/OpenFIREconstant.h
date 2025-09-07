@@ -94,6 +94,9 @@ public:
         PauseMode_ModeChange,
     PauseMode_LowButtonToggle,
     PauseMode_LayoutToggle,
+    #ifdef USES_RUMBLE
+    PauseMode_RumbleFFToggle,
+    #endif // USES_RUMBLE
     PauseMode_EscapeSignal
     };
     

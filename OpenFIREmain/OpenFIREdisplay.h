@@ -88,6 +88,9 @@ public:
         ScreenPause_ModeChange,
         ScreenPause_LowButtonToggle,
         ScreenPause_LayoutToggle,
+        #ifdef USES_RUMBLE
+        ScreenPause_RumbleFFToggle,
+        #endif // USES_RUMBLE
         ScreenPause_EscapeKey
     };
 

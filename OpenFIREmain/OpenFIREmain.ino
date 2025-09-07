@@ -586,7 +586,7 @@ void loop()
                           #endif // LED_ENABLE
                           
                           // Save the layout change
-                          OF_Prefs::SavePreferences();
+                          OF_Prefs::SaveProfiles();
                           
                           break;
                         #ifdef USES_RUMBLE

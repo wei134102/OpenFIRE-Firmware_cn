@@ -435,6 +435,17 @@ void ExtDisplay::PauseListUpdate(const int &selection)
             }
             display->setTextColor(WHITE, BLACK);
             display->setCursor(0, 47);
+            display->println(" Layout Toggle ");
+            break;
+          case ScreenPause_LayoutToggle:
+            display->setTextColor(WHITE, BLACK);
+            display->setCursor(0, 25);
+            display->println(" Low Button: " + String(OF_Prefs::toggles[OF_Const::lowButtonsMode] ? "ON" : "OFF"));
+            display->setTextColor(BLACK, WHITE);
+            display->setCursor(0, 36);
+            display->printf(" Layout: %s ", OF_Prefs::profiles[OF_Prefs::currentProfile].irLayout == OF_Const::layoutDiamond ? "Diamond" : "Square");
+            display->setTextColor(WHITE, BLACK);
+            display->setCursor(0, 47);
             display->println(" Send Escape Keypress ");
             break;
           case ScreenPause_ModeChange:

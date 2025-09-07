@@ -87,6 +87,7 @@ public:
         ScreenPause_AutofireToggle,
         ScreenPause_ModeChange,
         ScreenPause_LowButtonToggle,
+        ScreenPause_LayoutToggle,
         ScreenPause_EscapeKey
     };
 

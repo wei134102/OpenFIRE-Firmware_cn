@@ -93,8 +93,13 @@ public:
         PauseMode_AutofireToggle,
         PauseMode_ModeChange,
     PauseMode_LowButtonToggle,
+    PauseMode_LayoutToggle,
     PauseMode_EscapeSignal
     };
+    
+    // Layout types
+    static const constexpr uint8_t layoutSquare = 0;
+    static const constexpr uint8_t layoutDiamond = 1;
 
     //// Button Masks
     // button combo to send an escape keypress

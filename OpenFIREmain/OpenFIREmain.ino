@@ -597,7 +597,8 @@ void loop()
                           OF_Prefs::toggles[OF_Const::rumbleFF] = !OF_Prefs::toggles[OF_Const::rumbleFF];
                           
                           // Save the setting
-                          OF_Prefs::SavePreferences();
+                          OF_Prefs::SavePrefiles();
+                          
                           
                           // Update display
                           #ifdef USES_DISPLAY

@@ -229,6 +229,20 @@ void ExtDisplay::IdleOps()
                       }
                   }
               }
+          } else {
+          #endif // USES_TEMP
+              // Always show profile with layout when no temperature sensor is available
+              if(millis() - idleTimeStamp > OLED_IDLEUPD_INTERVAL) {
+                  idleTimeStamp = millis();
+                  // Create a temporary string with profile name and layout
+                  char profWithLayout[16]; // Make sure this is large enough
+                  strcpy(profWithLayout, OF_Prefs::profiles[OF_Prefs::currentProfile].name);
+                  strcat(profWithLayout, " ");
+                  strcat(profWithLayout, OF_Prefs::profiles[OF_Prefs::currentProfile].irLayout == OF_Const::layoutDiamond ? "Diam" : "Squa");
+                  
+                  TopPanelUpdate("Prof: ", profWithLayout);
+              }
+          #ifdef USES_TEMP
           }
           #endif // USES_TEMP
           break;

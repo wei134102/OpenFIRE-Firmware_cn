@@ -98,9 +98,19 @@ void ExtDisplay::ScreenModeChange(const int &screenMode, const bool &isAnalog)
             else {
                 if(TinyUSBDevices.onBattery) { display->drawBitmap(2, 46, btConnectIco, CONNECTION_WIDTH, CONNECTION_HEIGHT, WHITE); }
                 else { display->drawBitmap(2, 46, usbConnectIco, CONNECTION_WIDTH, CONNECTION_HEIGHT, WHITE); }
+                
+                // 显示Rumble Force Feedback状态
+                #ifdef USES_RUMBLE
+                if(OF_Prefs::pins[OF_Const::rumblePin] >= 0 && OF_Prefs::toggles[OF_Const::rumbleFF]) {
+                    display->setCursor(46, 48);
+                    display->setTextSize(1);
+                    display->print("RF");
+                }
+                #endif
+                
                 // 显示Low Button模式状态
                 if(OF_Prefs::toggles[OF_Const::lowButtonsMode]) {
-                    display->setCursor(70, 48);
+                    display->setCursor(64, 48);
                     display->setTextSize(1);
                     display->print("LOW");
                 }
@@ -158,9 +168,18 @@ void ExtDisplay::ScreenModeChange(const int &screenMode, const bool &isAnalog)
           case Screen_Mamehook_Single:
             if(TinyUSBDevices.onBattery) { display->drawBitmap(2, 46, btConnectIco, CONNECTION_WIDTH, CONNECTION_HEIGHT, WHITE); }
             else { display->drawBitmap(2, 46, usbConnectIco, CONNECTION_WIDTH, CONNECTION_HEIGHT, WHITE); }
+            // 显示Rumble Force Feedback状态
+            #ifdef USES_RUMBLE
+            if(OF_Prefs::pins[OF_Const::rumblePin] >= 0 && OF_Prefs::toggles[OF_Const::rumbleFF]) {
+                display->setCursor(46, 48);
+                display->setTextSize(1);
+                display->print("RF");
+            }
+            #endif            
+            
             // 显示Low Button模式状态
             if(OF_Prefs::toggles[OF_Const::lowButtonsMode]) {
-                display->setCursor(70, 48);
+                display->setCursor(64, 48);
                 display->setTextSize(1);
                 display->print("LOW");
             }
